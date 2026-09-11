@@ -91,8 +91,7 @@
   }
   .page.active{ opacity:1; visibility:visible; transform:scale(1) rotate(0deg); pointer-events:auto; }
 
-  .tap-zones{ position:absolute; inset:0; display:flex; z-index:40; }
-  .tap-zones .z{ flex:1; height:100%; }
+  
 
   .eyebrow-line{ font-family:'Caveat', cursive; font-size:21px; color:var(--violet); margin-bottom:2px; }
 
@@ -517,11 +516,7 @@
 
   </div>
 
-  <div class="tap-zones" id="tapzones">
-    <div class="z" data-dir="-1"></div>
-    <div class="z" data-dir="1"></div>
-  </div>
-
+  
   <button class="next-btn" id="nextBtn" aria-label="Next">›</button>
   <canvas id="confetti"></canvas>
 </div>
@@ -534,7 +529,7 @@
   var progressWrap = document.getElementById('progress');
   var envelope = document.getElementById('envelope');
   var nextBtn = document.getElementById('nextBtn');
-  var tapzones = document.getElementById('tapzones');
+  
   var stage = document.getElementById('stage');
 
   for(var i=0;i<total;i++){
@@ -549,7 +544,7 @@
     pages.forEach(function(p, idx){ p.classList.toggle('active', idx === current); });
     dashes.forEach(function(d, idx){ d.classList.toggle('done', idx <= current); });
     nextBtn.style.display = current === 0 ? 'none' : 'flex';
-    tapzones.style.pointerEvents = current === 0 ? 'none' : 'auto';
+    
     if(current === total - 1){ launchConfetti(); }
   }
 
@@ -570,11 +565,7 @@
     if(e.key === 'Enter' || e.key === ' ') envelope.click();
   });
 
-  tapzones.addEventListener('click', function(e){
-    if(current === 0) return;
-    var dir = e.target.getAttribute('data-dir');
-    if(dir) go(parseInt(dir,10));
-  });
+ 
 
   nextBtn.addEventListener('click', function(e){ e.stopPropagation(); go(1); });
 
@@ -582,7 +573,13 @@
     if(e.key === 'ArrowRight') go(1);
     if(e.key === 'ArrowLeft') go(-1);
   });
-
+stage.addEventListener('click', function(e){
+  if(current === 0) return;
+  if(e.target.closest('.photo-frame') || e.target.closest('#nextBtn') || e.target.closest('#envelope')) return;
+  var r = stage.getBoundingClientRect();
+  var x = e.clientX - r.left;
+  go(x < r.width / 2 ? -1 : 1);
+});
   /* subtle 3D tilt on pointer, desktop only */
   if(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
     stage.addEventListener('mousemove', function(e){
