@@ -82,7 +82,7 @@
   .page{
   position:absolute; inset:0;
   padding:56px 26px 40px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; justify-content:safe center;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start; 
   text-align:center;
   opacity:0; visibility:hidden;
   transform:scale(0.92) rotate(-1deg);
@@ -91,6 +91,13 @@
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
 }
+  .page::before, .page::after{
+  content:"";
+  flex:1;
+  min-height:0;
+}
+  
+
   .page.active{ opacity:1; visibility:visible; transform:scale(1) rotate(0deg); pointer-events:auto; }
 
   
